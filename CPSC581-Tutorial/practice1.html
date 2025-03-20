@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CPSC 581 Example 1</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js"></script>
+    <script>
+      $(document).ready(function () {
+        $("button").click(function () {
+          $("body").css("background", "black");
+        });
+        $("#custom-button").click(function () {
+          $("body").css("background", "white");
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <button>First Button</button>
+    <div
+      id="custom-button"
+      style="background: red; width: 100px; height: 100px"
+    ></div>
+  </body>
+</html>

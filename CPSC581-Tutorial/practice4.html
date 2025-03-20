@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CPSC 581 Example 4</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js"></script>
+    <script>
+      $(document).ready(function () {
+        let count = 1;
+        $("#dot").click(function (event) {
+          let size = count * 10 + "px";
+          $(this).css("width", size);
+          $(this).css("height", size);
+          count++;
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div
+      id="dot"
+      style="position: absolute; background: red; width: 10px; height: 10px"
+    ></div>
+  </body>
+</html>
