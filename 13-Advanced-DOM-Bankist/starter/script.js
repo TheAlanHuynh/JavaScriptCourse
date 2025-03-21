@@ -6,6 +6,10 @@ const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
 const btnScrollTo = document.querySelector('.btn--scroll-to');
 const section1 = document.querySelector('#section--1');
+const nav = document.querySelector('.nav');
+const tabs = document.querySelectorAll('.operations__tab');
+const tabsContainer = document.querySelector('.operations__tab-container');
+const tabsContent = document.querySelectorAll('.operations__content');
 
 ///////////////////////////////////////
 // Modal window
@@ -32,7 +36,7 @@ document.addEventListener('keydown', function (e) {
 });
 
 ///////////////////////////////////////
-// Button Scrolling 
+// Button Scrolling
 btnScrollTo.addEventListener('click', function (e) {
   const s1coords = section1.getBoundingClientRect();
   console.log(s1coords);
@@ -77,17 +81,127 @@ btnScrollTo.addEventListener('click', function (e) {
 // 1. Add event listener to common parent element
 // 2. Determine what element orginiated the event
 
-document.querySelector('.nav__links').addEventListener('click', function(e) {
+document.querySelector('.nav__links').addEventListener('click', function (e) {
   e.preventDefault();
 
   // Matching stratgey
-  if(e.target.classList.contains('nav__link')) {
+  if (e.target.classList.contains('nav__link')) {
     const id = e.target.getAttribute('href');
     console.log(id);
-    document.querySelector(id).scrollIntoView({behavior: 'smooth'});
+    document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
   }
-})
+});
 
+// Tabbed Componenet:
+tabsContainer.addEventListener('click', function (e) {
+  const clicked = e.target.closest('.operations__tab');
+  // console.log(clicked);
+
+  // Guard Clause
+  if (!clicked) return;
+
+  // Deactivate all tabs and activate clicked tab
+  tabs.forEach(t => t.classList.remove('operations__tab--active'));
+  tabsContent.forEach(c => c.classList.remove('operations__content--active'));
+  clicked.classList.add('operations__tab--active');
+
+  // Activate content area
+  // console.log(clicked.dataset.tab);
+  document
+    .querySelector(`.operations__content--${clicked.dataset.tab}`)
+    .classList.add('operations__content--active');
+});
+
+// Menu fade animation [mouseEnter vs MouseLeave, mouseOver vs mouseOut]
+const handleHover = function (e) {
+  if (e.target.classList.contains('nav__link')) {
+    const link = e.target;
+    const siblings = link.closest('.nav').querySelectorAll('.nav__link');
+    const logo = link.closest('.nav').querySelector('img');
+
+    siblings.forEach(el => {
+      if (el !== link) el.style.opacity = this;
+    });
+    logo.style.opacity = this;
+  }
+};
+
+// Passing an argument into handler
+nav.addEventListener('mouseover', handleHover.bind(0.5));
+nav.addEventListener('mouseout', handleHover.bind(1));
+
+/*
+// Sticky Navigation
+const initialCoors = section1.getBoundingClientRect();
+
+// console.log(initialCoors);
+
+window.addEventListener('scroll', function (e) {
+  // console.log(window.scrollY);
+
+  if (window.scrollY > initialCoors.top) nav.classList.add('sticky');
+  else nav.classList.remove('sticky');
+});
+
+// Sticky navigation: Intersection Observer API
+
+const obsCallback = function (enteries, observer) {
+  enteries.forEach(entry => {
+    console.log(entry);
+  });
+};
+
+const obsOptions = {
+  root: null, // null = viewport
+  threshold: [0, 0.2], //0.1 = 10% threshold of content being visible
+};
+
+//  obsCallback is called when threshold in obsOption is reached 
+const observer = new IntersectionObserver(obsCallback, obsOptions);
+
+// Assigning the observer to a specific section of the HTML
+observer.observe(section1);
+*/
+const header = document.querySelector('.header');
+const navHeight = nav.getBoundingClientRect().height;
+
+const stickyNav = function (enteries) {
+  const [entry] = enteries;
+  // console.log(entry);
+  if (!entry.isIntersecting) nav.classList.add('sticky');
+  else nav.classList.remove('sticky');
+};
+
+const headerObserver = new IntersectionObserver(stickyNav, {
+  root: null,
+  threshold: 0,
+  rootMargin: `-${navHeight}px`,
+});
+headerObserver.observe(header);
+
+// Reveal
+const allSections = document.querySelectorAll('.section');
+
+const revealSection = function (enteries, observer) {
+  const [entry] = enteries;
+  console.log(entry);
+
+  // Guard:
+  if (!entry.isIntersecting) return;
+
+  entry.target.classList.remove('section--hidden');
+  observer.unobserve(entry.target);
+};
+
+const sectionObserver = new IntersectionObserver(revealSection, {
+  root: null,
+  threshold: 0.15,
+});
+
+allSections.forEach(function (section) {
+  sectionObserver.observe(section);
+  section.classList.add('section--hidden');
+});
 
 ///////////////////////////////////////
 ///////////////////////////////////////
