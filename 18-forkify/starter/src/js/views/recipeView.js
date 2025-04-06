@@ -5,7 +5,7 @@ import icons from 'url:../../img/icons.svg';
 class RecipeView extends View {
   _parentElement = document.querySelector('.recipe');
   _errorMessage = 'We could not find that recipe. Please try another one!';
-  _successMessage = '';
+  _message = '';
 
   addHandlerRender(handler) {
     ['hashchange', 'load'].forEach(ev => window.addEventListener(ev, handler));
@@ -76,8 +76,10 @@ class RecipeView extends View {
           </div>
         </div>
 
-        <div class="recipe__user-generated">
-
+        <div class="recipe__user-generated ${this._data.key ? '' : 'hidden'}">
+          <svg>
+            <use href="${icons}#icon-user"></use>
+          </svg>
         </div>
         <button class="btn--round btn--bookmark">
           <svg class="">
@@ -124,9 +126,9 @@ class RecipeView extends View {
         <svg class="recipe__icon">
           <use href="${icons}#icon-check"></use>
         </svg>
-        <div class="recipe__quantity">${ing.quantity}</div>
+        <div class="recipe__quantity">${ing.quantity ? ing.quantity : ''}</div>
         <div class="recipe__description">
-          <span class="recipe__unit">${ing.unit}</span>
+          <span class="recipe__unit">${ing.unit ? ing.unit : ''}</span>
           ${ing.description}
         </div>
       </li>
